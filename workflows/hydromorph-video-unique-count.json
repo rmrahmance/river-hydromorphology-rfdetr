@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "inputs": [
+    {"type": "WorkflowImage", "name": "image"},
+    {"type": "WorkflowParameter", "name": "confidence", "default_value": 0.35},
+    {"type": "WorkflowParameter", "name": "iou_threshold", "default_value": 0.5}
+  ],
+  "steps": [
+    {"type": "roboflow_core/roboflow_object_detection_model@v2", "name": "detector", "images": "$inputs.image",
+     "model_id": "rs-workspace-o0dgc/river-feature-object-detection-wbzft-1-rfdetr-medium-t1",
+     "confidence": 0.2, "iou_threshold": "$inputs.iou_threshold", "max_detections": 300},
+    {"type": "roboflow_core/trackers_bytetrack@v1", "name": "bytetrack", "image": "$inputs.image",
+     "detections": "$steps.detector.predictions", "track_activation_threshold": "$inputs.confidence",
+     "high_conf_det_threshold": "$inputs.confidence", "minimum_iou_threshold": 0.1,
+     "minimum_consecutive_frames": 3, "lost_track_buffer": 45},
+    {"type": "roboflow_core/track_class_lock@v1", "name": "class_lock", "image": "$inputs.image",
+     "detections": "$steps.bytetrack.tracked_detections", "min_votes": 5,
+     "vote_confidence": "$inputs.confidence", "lead_margin": 2, "switch_after": 15},
+    {"type": "roboflow_core/detection_event_log@v1", "name": "event_log", "image": "$inputs.image",
+     "detections": "$steps.class_lock.tracked_detections", "frame_threshold": 5, "stale_frames": 300,
+     "flush_interval": 30},
+    {"type": "roboflow_core/bounding_box_visualization@v1", "name": "box_viz", "image": "$inputs.image",
+     "predictions": "$steps.class_lock.tracked_detections", "thickness": 2, "color_axis": "CLASS"},
+    {"type": "roboflow_core/label_visualization@v1", "name": "label_viz", "image": "$steps.box_viz.image",
+     "predictions": "$steps.class_lock.tracked_detections", "text": "Class and Confidence", "text_scale": 0.5,
+     "color_axis": "CLASS"}
+  ],
+  "outputs": [
+    {"type": "JsonField", "name": "tracked_predictions", "selector": "$steps.class_lock.tracked_detections"},
+    {"type": "JsonField", "name": "new_instances", "selector": "$steps.bytetrack.new_instances"},
+    {"type": "JsonField", "name": "event_log", "selector": "$steps.event_log.*"},
+    {"type": "JsonField", "name": "annotated_image", "selector": "$steps.label_viz.image"}
+  ]
+}

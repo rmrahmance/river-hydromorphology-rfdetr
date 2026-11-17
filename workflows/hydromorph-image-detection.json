@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "inputs": [
+    {"type": "WorkflowImage", "name": "image"},
+    {"type": "WorkflowParameter", "name": "confidence", "default_value": 0.35},
+    {"type": "WorkflowParameter", "name": "class_thresholds", "default_value": {}},
+    {"type": "WorkflowParameter", "name": "iou_threshold", "default_value": 0.5}
+  ],
+  "steps": [
+    {"type": "roboflow_core/roboflow_object_detection_model@v2", "name": "detector", "images": "$inputs.image",
+     "model_id": "rs-workspace-o0dgc/river-feature-object-detection-wbzft-1-rfdetr-medium-t1",
+     "confidence": 0.2, "iou_threshold": "$inputs.iou_threshold", "max_detections": 300},
+    {"type": "roboflow_core/per_class_confidence_filter@v1", "name": "confidence_filter",
+     "predictions": "$steps.detector.predictions", "class_thresholds": "$inputs.class_thresholds",
+     "default_threshold": "$inputs.confidence"},
+    {"type": "roboflow_core/property_definition@v1", "name": "object_count",
+     "data": "$steps.confidence_filter.predictions", "operations": [{"type": "SequenceLength"}]},
+    {"type": "roboflow_core/bounding_box_visualization@v1", "name": "box_viz", "image": "$inputs.image",
+     "predictions": "$steps.confidence_filter.predictions", "thickness": 2, "color_axis": "CLASS"},
+    {"type": "roboflow_core/label_visualization@v1", "name": "label_viz", "image": "$steps.box_viz.image",
+     "predictions": "$steps.confidence_filter.predictions", "text": "Class and Confidence", "text_scale": 0.5,
+     "color_axis": "CLASS"}
+  ],
+  "outputs": [
+    {"type": "JsonField", "name": "predictions", "selector": "$steps.confidence_filter.predictions"},
+    {"type": "JsonField", "name": "object_count", "selector": "$steps.object_count.output"},
+    {"type": "JsonField", "name": "annotated_image", "selector": "$steps.label_viz.image"}
+  ]
+}

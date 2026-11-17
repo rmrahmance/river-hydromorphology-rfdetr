@@ -1,0 +1,39 @@
+{
+  "workspace": "rs-workspace-o0dgc",
+  "project": {
+    "id": "river-feature-object-detection-wbzft",
+    "url": "https://app.roboflow.com/rs-workspace-o0dgc/river-feature-object-detection-wbzft",
+    "type": "object-detection",
+    "license": "CC BY 4.0",
+    "source": "forked from https://universe.roboflow.com/avizit-biswas/river-feature-object-detection (identical to the local 'River Feature Object Detection.coco' export)",
+    "images": 436,
+    "splits": {"train": 361, "valid": 50, "test": 25}
+  },
+  "version": {
+    "number": 1,
+    "images_after_augmentation": 1158,
+    "splits": {"train": 1083, "valid": 50, "test": 25},
+    "preprocessing": {"auto-orient": true, "resize": {"format": "Fit within", "width": 1280, "height": 1280}},
+    "augmentation": {"outputs_per_training_image": 3, "flip": "horizontal", "crop": "0-20%",
+                     "brightness": "+/-20%", "exposure": "+/-10%", "hue": "+/-10 deg", "saturation": "+/-20%",
+                     "blur": "1 px", "noise": "1%"}
+  },
+  "training": {
+    "training_id": "57058c632ad84b5156a4",
+    "model_type": "rfdetr-medium",
+    "resolution": 1280,
+    "online_augmentation": {"motion-blur": "7 px, p=0.2", "camera-gain": "0.1, p=0.2", "rotate": "5 deg, p=0.3"},
+    "classes_omitted": ["bed_protection", "bed_fall", "transverse_bar", "ramp", "bedrock"],
+    "note": "RF-DETR NAS not available on the public plan",
+    "duration_min": 99
+  },
+  "model": {
+    "id": "rs-workspace-o0dgc/river-feature-object-detection-wbzft-1-rfdetr-medium-t1",
+    "metrics_valid": {"map50": 57.49, "precision": 66.4, "recall": 51.3}
+  },
+  "workflows": {
+    "image": "hydromorph-image-detection",
+    "video": "hydromorph-video-unique-count"
+  },
+  "default_confidence": 0.35
+}

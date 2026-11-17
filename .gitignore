@@ -1,0 +1,13 @@
+# never commit keys or local data
+.env
+*.env
+__pycache__/
+*.pyc
+.venv/
+data/
+data_processed/
+data_raw_satellite/
+SWATplus/
+LSTM/*.pt
+logs/
+hydromorph_results/

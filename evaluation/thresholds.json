@@ -1,0 +1,153 @@
+{
+  "method": "count-matching per image/class on 74 held-out images (valid 49 + test 25)",
+  "global_threshold": 0.35,
+  "class_thresholds": {
+    "building": 0.4,
+    "wood_stump": 0.35,
+    "woody_debris_jam": 0.35,
+    "fallen_tree": 0.4,
+    "road": 0.45,
+    "Erosion": 0.35,
+    "riffle": 0.35,
+    "root": 0.3,
+    "Island": 0.4,
+    "longitudinal_bar": 0.35,
+    "Bank_protection": 0.35,
+    "bifurcation": 0.35,
+    "organic_bed": 0.35
+  },
+  "per_class": [
+    {
+      "class": "building",
+      "gt_instances": 177,
+      "threshold": 0.4,
+      "precision": 0.796,
+      "recall": 0.859,
+      "f1": 0.826,
+      "predicted_total": 191,
+      "per_class_fit": true
+    },
+    {
+      "class": "wood_stump",
+      "gt_instances": 118,
+      "threshold": 0.35,
+      "precision": 0.804,
+      "recall": 0.763,
+      "f1": 0.783,
+      "predicted_total": 112,
+      "per_class_fit": true
+    },
+    {
+      "class": "woody_debris_jam",
+      "gt_instances": 102,
+      "threshold": 0.35,
+      "precision": 0.743,
+      "recall": 0.824,
+      "f1": 0.781,
+      "predicted_total": 113,
+      "per_class_fit": true
+    },
+    {
+      "class": "fallen_tree",
+      "gt_instances": 87,
+      "threshold": 0.4,
+      "precision": 0.812,
+      "recall": 0.747,
+      "f1": 0.778,
+      "predicted_total": 80,
+      "per_class_fit": true
+    },
+    {
+      "class": "road",
+      "gt_instances": 75,
+      "threshold": 0.45,
+      "precision": 0.964,
+      "recall": 0.72,
+      "f1": 0.824,
+      "predicted_total": 56,
+      "per_class_fit": true
+    },
+    {
+      "class": "Erosion",
+      "gt_instances": 73,
+      "threshold": 0.35,
+      "precision": 0.723,
+      "recall": 0.644,
+      "f1": 0.681,
+      "predicted_total": 65,
+      "per_class_fit": true
+    },
+    {
+      "class": "riffle",
+      "gt_instances": 57,
+      "threshold": 0.35,
+      "precision": 0.786,
+      "recall": 0.772,
+      "f1": 0.779,
+      "predicted_total": 56,
+      "per_class_fit": true
+    },
+    {
+      "class": "root",
+      "gt_instances": 52,
+      "threshold": 0.3,
+      "precision": 0.569,
+      "recall": 0.558,
+      "f1": 0.563,
+      "predicted_total": 51,
+      "per_class_fit": true
+    },
+    {
+      "class": "Island",
+      "gt_instances": 38,
+      "threshold": 0.4,
+      "precision": 0.816,
+      "recall": 0.816,
+      "f1": 0.816,
+      "predicted_total": 38,
+      "per_class_fit": true
+    },
+    {
+      "class": "longitudinal_bar",
+      "gt_instances": 35,
+      "threshold": 0.35,
+      "precision": 0.677,
+      "recall": 0.6,
+      "f1": 0.636,
+      "predicted_total": 31,
+      "per_class_fit": true
+    },
+    {
+      "class": "Bank_protection",
+      "gt_instances": 8,
+      "threshold": 0.35,
+      "precision": 1.0,
+      "recall": 0.625,
+      "f1": 0.769,
+      "predicted_total": 5,
+      "per_class_fit": false
+    },
+    {
+      "class": "bifurcation",
+      "gt_instances": 8,
+      "threshold": 0.35,
+      "precision": 1.0,
+      "recall": 0.25,
+      "f1": 0.4,
+      "predicted_total": 2,
+      "per_class_fit": false
+    },
+    {
+      "class": "organic_bed",
+      "gt_instances": 8,
+      "threshold": 0.35,
+      "precision": 0.333,
+      "recall": 0.25,
+      "f1": 0.286,
+      "predicted_total": 6,
+      "per_class_fit": false
+    }
+  ],
+  "test_holdout_f1_per_class_thresholds": 0.712,
+  "test_holdout_f1_global_threshold": 0.735
+}

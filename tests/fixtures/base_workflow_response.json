@@ -1,0 +1,14 @@
+[
+  {
+    "predictions": {
+      "image": {"width": 1600, "height": 1200},
+      "predictions": [
+        {"width": 704, "height": 384, "x": 887, "y": 634, "confidence": 0.6195430755615234, "class_id": 12, "class": "woody_debris_jam", "detection_id": "3dd13c2d-20f2-4c11-befc-6c5292163b04", "parent_id": "image"},
+        {"width": 898, "height": 685, "x": 1151, "y": 486.5, "confidence": 0.4628397226333618, "class_id": 5, "class": "fallen_tree", "detection_id": "c00cdb27-8431-4898-a043-2489eb1cb902", "parent_id": "image"},
+        {"width": 704, "height": 384, "x": 887, "y": 634, "confidence": 0.42050090432167053, "class_id": 5, "class": "fallen_tree", "detection_id": "a3ca4027-972e-4d55-93ba-f85f9365a253", "parent_id": "image"}
+      ]
+    },
+    "inference_id": "8d870391-dbd3-4676-885a-1d5ea1cf4fb6",
+    "model_id": "river-feature-object-detection-wbzft/1"
+  }
+]
