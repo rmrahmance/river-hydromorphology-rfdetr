@@ -64,6 +64,16 @@ Outputs go to `hydromorph_results/`:
 - **Images:** `*_annotated.jpg`, `*_detections.json`, and `image_inventory.csv` (class, count, mean/min/max confidence). With `--image-workflow base` there is no `*_annotated.jpg`.
 - **Videos:** `*_annotated.mp4`, `*_tracks.csv` (one row per physical object: track ID, class, frames seen, first seen in seconds, confidence), and `*_inventory.csv` (unique objects per class).
 
+CSV columns:
+
+| File | Columns |
+|---|---|
+| `image_inventory.csv` | `image`, `class`, `count`, `mean_conf`, `min_conf`, `max_conf` (one row per image and class) |
+| `*_tracks.csv` | `track_id`, `class`, `frames_seen`, `first_frame`, `last_frame`, `first_seen_s`, `mean_conf`, `max_conf` |
+| `*_inventory.csv` | `class`, `unique_objects` |
+
+In `*_tracks.csv` the class is the one the tracker saw most often for that track. Tracks seen in fewer than `--min-frames` frames (default 5) are dropped from both video CSVs. `first_seen_s` stays empty if the video has no frame rate.
+
 The first run takes about a minute while the model warms up.
 
 ## Base Workflow from Python (`base_workflow.py`)
