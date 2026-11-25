@@ -17,7 +17,7 @@ All IDs, settings and the training recipe are in [`project_info.json`](project_i
 
 ## Choosing the confidence threshold
 
-I ran the model on the 74 held-out images and compared predicted with labelled counts per class and image.
+I ran the model on 74 of the 75 held-out images (49 valid, 25 test; one valid image is excluded) and compared predicted with labelled counts per class and image.
 
 | Threshold | Precision | Recall | F1 |
 |---|---|---|---|
@@ -26,7 +26,7 @@ I ran the model on the 74 held-out images and compared predicted with labelled c
 | 0.40 | 0.80 | 0.70 | 0.75 |
 | 0.50 | 0.87 | 0.60 | 0.71 |
 
-At 0.35 precision and recall are about equal, so total counts per class are close to unbiased. Per-class thresholds fitted on the validation split did worse on the test split (F1 0.712 against 0.735), so one global threshold is used. The script and raw counts are in [`evaluation/`](evaluation).
+At 0.35 precision and recall are about equal, so the total count is close to the labels (871 predicted, 838 labelled). Single classes can be further off: building is over-counted (226 against 177). Per-class thresholds fitted on the validation split did worse on the test split (F1 0.712 against 0.735), so one global threshold is used. The script and raw counts are in [`evaluation/`](evaluation).
 
 **Limitations.** Several classes have fewer than 10 held-out labels and are not reliable yet. Train, validation and test were split by frame, not by video, so neighbouring frames of one clip can sit in different splits and the scores are likely optimistic. More labels for rare classes and a split by video would help most.
 

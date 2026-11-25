@@ -16,7 +16,7 @@ Training metrics (Roboflow, validation split): mAP@50 57.5 %, precision 66.4 %, 
 
 ## Why the confidence threshold is 0.35
 
-I ran the model on all 74 labeled held-out images (valid + test) and compared predicted counts with labeled counts for each class and image. This count-matching check scores counts only, not box overlap.
+I ran the model on 74 of the 75 held-out images (49 valid, 25 test; one valid image is excluded) and compared predicted counts with labeled counts for each class and image. This count-matching check scores counts only, not box overlap.
 
 | Threshold | Precision | Recall | F1 |
 |---|---|---|---|
@@ -25,7 +25,7 @@ I ran the model on all 74 labeled held-out images (valid + test) and compared pr
 | 0.40 | 0.80 | 0.70 | 0.75 |
 | 0.50 | 0.87 | 0.60 | 0.71 |
 
-- At 0.35, precision is about equal to recall, so total counts per class come out nearly unbiased. That matters most for an inventory.
+- At 0.35, precision is about equal to recall, so the total count comes out nearly unbiased (871 predicted, 838 labeled). Single classes can be further off, see the table below. That matters most for an inventory.
 - Per-class thresholds fitted on the valid split did worse on test (F1 0.712) than one global threshold (0.735). With this little data they overfit, so one global threshold is used. The image Workflow still accepts a `class_thresholds` dict if you want to override individual classes later.
 - Tiled (SAHI-style) inference on 4K stills was tested and did not help, so it is not used.
 
