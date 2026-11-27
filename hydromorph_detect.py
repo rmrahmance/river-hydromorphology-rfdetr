@@ -40,6 +40,7 @@ VIDEO_EXT = {".mp4", ".mov", ".avi", ".mkv", ".m4v", ".wmv", ".flv"}
 
 
 def api_key() -> str:
+    """Roboflow key from ROBOFLOW_API_KEY, or from a .env file in the current folder."""
     key = os.environ.get("ROBOFLOW_API_KEY")
     if not key:
         env = Path(".env")
@@ -52,7 +53,7 @@ def api_key() -> str:
     return key
 
 
-def preds_list(obj):
+def preds_list(obj) -> list[dict]:
     """Normalise a serialised detections output to a list of prediction dicts."""
     if obj is None:
         return []
@@ -64,7 +65,11 @@ def preds_list(obj):
 
 
 # ----------------------------------------------------------------- images
-def run_images(paths, out_dir: Path, conf: float):
+def run_images(paths: list[Path], out_dir: Path, conf: float) -> None:
+    """Run the hydromorph image workflow on each image.
+
+    Writes <stem>_annotated.jpg, <stem>_detections.json and image_inventory.csv to out_dir.
+    """
     from inference_sdk import InferenceHTTPClient
 
     client = InferenceHTTPClient(api_url=API_URL, api_key=api_key())
@@ -88,7 +93,7 @@ def run_images(paths, out_dir: Path, conf: float):
     _write_image_inventory(out_dir, rows)
 
 
-def run_images_base(paths, out_dir: Path, conf: float):
+def run_images_base(paths: list[Path], out_dir: Path, conf: float) -> None:
     """Raw detections from the Base Workflow (no annotated image, no per-class filter)."""
     from base_workflow import (BaseWorkflowError, SdkVersionError, WorkflowAuthError,
                                WorkflowNotFoundError, detect_river_features)
@@ -113,7 +118,8 @@ def run_images_base(paths, out_dir: Path, conf: float):
         print(f"{failed} of {len(paths)} images failed; see messages above.")
 
 
-def _inventory_rows(image_name, preds):
+def _inventory_rows(image_name: str, preds: list[dict]) -> list[list]:
+    """One row per class: image, class, count, mean/min/max confidence."""
     counts = Counter(d["class"] for d in preds)
     rows = []
     for cls, n in sorted(counts.items()):
@@ -122,7 +128,8 @@ def _inventory_rows(image_name, preds):
     return rows
 
 
-def _write_image_inventory(out_dir: Path, rows):
+def _write_image_inventory(out_dir: Path, rows: list[list]) -> None:
+    """Write image_inventory.csv (columns as in docs/USAGE.md)."""
     with open(out_dir / "image_inventory.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["image", "class", "count", "mean_conf", "min_conf", "max_conf"])
@@ -140,7 +147,8 @@ class TrackBook:
         self.cls_votes = defaultdict(Counter)
         self.conf = defaultdict(list)
 
-    def add(self, frame_id, tid, cls, conf):
+    def add(self, frame_id: int, tid, cls: str, conf: float) -> None:
+        """Record one tracked detection. Detections without a track ID are ignored."""
         if tid is None or tid < 0:
             return
         self.frames[tid] += 1
@@ -149,7 +157,12 @@ class TrackBook:
         self.cls_votes[tid][cls] += 1
         self.conf[tid].append(conf)
 
-    def write(self, out_dir: Path, stem: str, min_frames: int, fps: float):
+    def write(self, out_dir: Path, stem: str, min_frames: int, fps: float) -> Counter:
+        """Write <stem>_tracks.csv and <stem>_inventory.csv and return unique objects per class.
+
+        Tracks seen in fewer than min_frames frames are dropped. A track's class is the one
+        it was given most often.
+        """
         tracks = []
         for tid, n in self.frames.items():
             if n < min_frames:
@@ -174,7 +187,8 @@ class TrackBook:
         return inv
 
 
-def run_video_serverless(path: Path, out_dir: Path, min_frames: int, plan, conf: float):
+def run_video_serverless(path: Path, out_dir: Path, min_frames: int, plan, conf: float) -> Counter:
+    """Track objects in a video on Roboflow serverless (WebRTC) and write the annotated MP4 and CSVs."""
     import cv2
     from inference_sdk import InferenceHTTPClient
     from inference_sdk.webrtc import StreamConfig, VideoFileSource
@@ -225,7 +239,8 @@ def run_video_serverless(path: Path, out_dir: Path, min_frames: int, plan, conf:
     return book.write(out_dir, path.stem, min_frames, fps)
 
 
-def run_video_local(path: Path, out_dir: Path, min_frames: int, conf: float):
+def run_video_local(path: Path, out_dir: Path, min_frames: int, conf: float) -> Counter:
+    """Same as run_video_serverless, but runs the workflow on this machine (needs `pip install inference`)."""
     import cv2
     from inference import InferencePipeline
 
